@@ -1,0 +1,40 @@
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    margin:0px;
+    padding:0px;
+    width:100%;
+}
+
+#container {
+    background-color: #ccc;
+    padding-left: 5vw;
+    padding-right:5vw;
+}
+
+.matrix-cell {
+    float: left;
+    max-height: 30vh;
+    max-width: 30vw;
+}
+
+.matrix-cell.selected {
+    border: 1px red solid;
+}
+
+.locked {
+    opacity: 0.5;
+}
+
+.gallery-row {
+    margin-bottom: 1%;
+}
+
+.play-btn {
+    margin: 1%;
+}

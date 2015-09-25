@@ -1,0 +1,39 @@
+<div id="container" class="row">
+    <div class="col-xs-12" ng-show="containerShown">
+        <div class="row matrix-row" ng-repeat-start="row in puzzleMatrix.tiles">
+            <img ng-src="{{ sources[$parent.$index][$index] }}" ng-click="cellClick($parent.$index, $index)" class="matrix-cell" ng-repeat="col in row" />
+        </div>
+        <div class="clearfix" ng-repeat-end></div>
+    </div>
+
+    <div class="col-xs-12" ng-show="originalShown">
+        <div id="original">
+            <img class="img-responsive center-block" ng-src="{{ imgSource }}" />
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <button class="btn btn-info" ng-mousedown="showOriginal()" ng-mouseup="hideOriginal()">
+            <span class="glyphicon glyphicon-picture"></span>
+        </button>
+    </div>
+</div>
+
+<!-- <div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-6"><p>Time: <span ng-bind="minutes"></span>:<span ng-bind="seconds"></span></p></div>
+        <div class="col-xs-6" style="text-align:right;">
+            <p>Moves: <span ng-bind="moves"></span></p>
+        </div>
+    </div>
+</div>
+    -->
+<!--
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn" onclick="window.plugins.socialsharing.share('Sharing text!')">SHARE</button>
+        <button class="btn" onclick="window.plugins.socialsharing.share('test and link!', null, null, 'http://www.google.es')">SHARE LINK AND TEXT</button>
+        <div id="my_log"></div>
+    </div>
+</div>
+-->
