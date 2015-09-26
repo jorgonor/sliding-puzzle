@@ -195,13 +195,21 @@ puzzleServices.factory('ImageCropper', function () {
             this.context = this.canvas.getContext('2d');
         },
         crop: function (row, col) {
+
+            console.log("image complete", this.image.complete);
             if (!this.image.complete) {
                 return null;
             }
 
+            var r;
+
             this.context.drawImage(this.image, row * this.width, col * this.height, this.width, this.height, 0, 0, this.width, this.height);
 
-            return this.canvas.toDataURL();
+            r = this.canvas.toDataURL();
+
+            console.log("in (row, col) (" + row + ", " + col + ") the data is ", r); 
+
+            return r;
         }
     }
 });
@@ -219,6 +227,8 @@ puzzleServices.factory('PuzzleRenderer', ['PuzzleMatrix', 'ImageCropper', functi
                 x = [];
                 for (j = 0; j < this.partitions; j++) {
                     obj = PuzzleMatrix.tiles[i][j];
+
+                    console.log("puzzle matrix", PuzzleMatrix, obj, obj.i);
 
                     if (obj.i === null) {
                         src = "http://placehold.it/400x400";

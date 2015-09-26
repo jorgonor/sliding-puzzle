@@ -1,28 +1,17 @@
-<div class="row">
-    <h3>Select a level.</h3>
-</div>
-<div class="row">
-    <div class="col-md-12" >
-        <div class="row hidden-sm hidden-md hidden-lg">
-            <div class="col-xs-6">
+<ion-view view-title="Select a difficulty">
+    <ion-content>
+        <div class="row">
+            <img ng-src="{{ fullSrc }}" class="img-responsive center-block" style="max-height: 50vh"/>
+        </div>
+        <div class="row">
+            <div class="col col-50">
                 <a href="#{{ playableLevels.indexOf(3) >= 0 ? ('/puzzle/play/3/' + puzzle.src ) : '' }}"
-                   class="btn btn-primary btn-block play-btn" role="button">Play 3x3</a>
+                   class="button button-positive button-block play-btn" role="button">Play 3x3</a>
             </div>
-            <div class="col-xs-6">
+            <div class="col col-50">
                 <a href="#{{ playableLevels.indexOf(4) >= 0 ? ('/puzzle/play/4/' + puzzle.src ) : '' }}"
-                   class="btn btn-primary btn-block play-btn {{ playableLevels.indexOf(4) == -1 ? 'disabled' : '' }}" role="button">Play 4x4</a>
+                   class="button button-positive button-block play-btn {{ playableLevels.indexOf(4) == -1 ? 'disabled' : '' }}" role="button">Play 4x4</a>
             </div>
         </div>
-        <img ng-src="{{ fullSrc }}" class="img-responsive center-block" style="max-height:80%"/>
-        <div class="row hidden-xs">
-            <div class="col-md-12">
-                <a href="#{{ playableLevels.indexOf(3) >= 0 ? ('/puzzle/play/3/' + puzzle.src ) : '' }}"
-                    class="btn btn-primary btn-block play-btn" role="button">Play 3x3</a>
-            </div>
-            <div class="col-md-12">
-                <a href="#{{ playableLevels.indexOf(4) >= 0 ? ('/puzzle/play/4/' + puzzle.src ) : '' }}"
-                    class="btn btn-primary btn-block play-btn {{ playableLevels.indexOf(4) == -1 ? 'disabled' : '' }}" role="button">Play 4x4</a>
-            </div>
-        </div>
-    </div>
-</div>
+    </ion-content>
+</ion-view>

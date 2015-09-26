@@ -57,6 +57,8 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
     };
 
     $scope.cellClick = function (i, j) {
+        onChange();
+        /*
         var target = evt.target, tile, possibleTiles;
 
  
@@ -85,6 +87,7 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
                 }
             }
         }
+        */
     };
 
     container = document.getElementById('container');

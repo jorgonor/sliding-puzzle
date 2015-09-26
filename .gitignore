@@ -4,3 +4,7 @@
 node_modules/
 platforms/
 plugins/
+.vs/
+*.sln
+*.jsproj
+*.jsproj.user
