@@ -3,7 +3,7 @@
 var puzzleControllers = angular.module('puzzleControllers', []);
 
 puzzleControllers.controller('IndexCtrl', function($scope) {
-	console.log("So I am a controller...");
+	console.log("So I am the index controller...");
     document.getElementById('link_connectfb').addEventListener('click', function() {
         facebookConnectPlugin.login(['public_profile', 'email'], function(userData) {
             document.getElementById('facebookApiResult', JSON.stringify(userData));
@@ -41,7 +41,7 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
 
     var onChange, container, partitions;
 
-    $scope.imgSource =  '/img/' + $stateParams.src;
+    $scope.imgSource =  'img/' + $stateParams.src;
     $scope.containerShown = true;
     $scope.originalShown = false;
     $scope.puzzleMatrix = PuzzleMatrix;
@@ -93,20 +93,33 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
     container = document.getElementById('container');
     partitions = parseInt($stateParams.size);
 
-    // TODO Calculate the proper size.
-    ImageCropper.initialize(133, 133, $scope.imgSource);
-    PuzzleMatrix.initialize(partitions, partitions);
-    PuzzleRenderer.initialize(container, partitions);
-    $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
+    var img = new Image();
+    img.onload = function () {
+        console.log("image onload called on play");
 
-    console.log("$scope.sources", $scope.sources);
-
-    onChange = function () {
+        // TODO Calculate the proper size.
+        ImageCropper.initialize(133, 133, img);
+        PuzzleMatrix.initialize(partitions, partitions);
+        PuzzleRenderer.initialize(container, partitions);
         $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
-        console.log("$scope.sources", $scope.sources);
-        if (PuzzleMatrix.isCompleted()) {
-            PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
-            alert('You did it!!!');
-        }
+
+        console.log("$scope.sources initialized", $scope.sources);
+
+        onChange = function () {
+            $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
+            console.log("$scope.sources", $scope.sources);
+            if (PuzzleMatrix.isCompleted()) {
+                PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
+                alert('You did it!!!');
+            }
+        };
     };
+    img.src = $scope.imgSource;
+    if (img.complete) {
+        img.onload();
+        console.log("image complete at first: " + img.src);
+    } else {
+        console.log("image not complete at first: " + img.src);
+    }
+
 }]);

@@ -93,7 +93,7 @@ puzzleServices.factory('PuzzleManager', function() {
         {id: "Rally", src: "1.jpg", order: 0},
         {id: "Soldier in the mud", src: "2.jpg", order: 1 },
         {id: "Girl", src: "3.jpg", order: 2},
-        { id: "Athletism Training", src: "4.jpg", order: 3, },
+        {id: "Athletism Training", src: "4.jpg", order: 3, },
         {id: "Medieval Cannon", src: "5.jpg", order: 4}
     ];
 
@@ -178,13 +178,10 @@ puzzleServices.factory('PuzzleManager', function() {
 
 puzzleServices.factory('ImageCropper', function () {
     return {
-        initialize: function (width, height, imgPath) {
+        initialize: function (width, height, image) {
             this.width = width;
             this.height = height;
-            this.imgPath = imgPath;
-
-            this.image = new Image();
-            this.image.src = imgPath;
+            this.image = image;
             this._initializeCanvas();
         },
         _initializeCanvas: function () {
@@ -196,7 +193,7 @@ puzzleServices.factory('ImageCropper', function () {
         },
         crop: function (row, col) {
 
-            console.log("image complete", this.image.complete);
+            console.log("image complete" + this.image.complete);
             if (!this.image.complete) {
                 return null;
             }
@@ -228,10 +225,8 @@ puzzleServices.factory('PuzzleRenderer', ['PuzzleMatrix', 'ImageCropper', functi
                 for (j = 0; j < this.partitions; j++) {
                     obj = PuzzleMatrix.tiles[i][j];
 
-                    console.log("puzzle matrix", PuzzleMatrix, obj, obj.i);
-
                     if (obj.i === null) {
-                        src = "http://placehold.it/400x400";
+                        src = "http://placehold.it/133x133";
                     } else {
                         src = ImageCropper.crop(obj.i, obj.j);
                     }

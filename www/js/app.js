@@ -16,7 +16,6 @@ angular.module('puzzleApp', ['ionic', 'puzzleControllers', 'puzzleServices'])
 })
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-	console.log("on config with arguments", arguments);
 	$stateProvider
 	.state('index', {
 		url: '/index',
