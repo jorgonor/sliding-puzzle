@@ -17,14 +17,27 @@ body {
     padding-right:5vw;
 }
 
+#original {
+    max-height: 75vh;
+}
+
 .matrix-row {
     padding: 0;
 }
 
 .matrix-cell {
     float: left;
+    border: 1px solid #aaa;
+}
+
+.matrix-cell-3 {
     max-height: 25vh;
     max-width: 25vw;
+}
+
+.matrix-cell-4 {
+    max-height: 18.75vh;
+    max-width: 18.75vw;
 }
 
 .matrix-cell.selected {
@@ -33,6 +46,14 @@ body {
 
 .locked {
     opacity: 0.5;
+}
+
+.locked-layer {
+    position:relative;
+    background:url('../img/lock.png') no-repeat center;
+    z-index:999;
+    display:block;
+    background-size: 50%
 }
 
 .gallery-row {

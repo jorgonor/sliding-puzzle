@@ -1,9 +1,10 @@
 'use strict';
 
+var IMAGES_SIZE = 1200;
 var puzzleControllers = angular.module('puzzleControllers', []);
 
-puzzleControllers.controller('IndexCtrl', function($scope) {
-	console.log("So I am the index controller...");
+puzzleControllers.controller('IndexCtrl', ['$scope', function ($scope) {
+    // TODO Reimplement with a working facebook plugin.
     document.getElementById('link_connectfb').addEventListener('click', function() {
         facebookConnectPlugin.login(['public_profile', 'email'], function(userData) {
             document.getElementById('facebookApiResult', JSON.stringify(userData));
@@ -11,13 +12,17 @@ puzzleControllers.controller('IndexCtrl', function($scope) {
             alert('Failed: ' + message);
         });
     });
-});
+}]);
 
 puzzleControllers.controller('GalleryCtrl', ['$scope', 'AdService', 'PuzzleManager', function($scope, AdService, PuzzleManager) {
-    var availableLevels = [];
+    var availableLevels = [], lastArray = null;
 
-    angular.forEach(PuzzleManager.getAll(), function(puzzle, index) {
-        availableLevels.push({
+    angular.forEach(PuzzleManager.getAll(), function (puzzle, index) {
+        if (index % 2 == 0) {
+            lastArray = [];
+            availableLevels.push(lastArray);
+        }
+        lastArray.push({
             puzzle: puzzle,
             canPlay: PuzzleManager.isUnlocked(puzzle)
         });
@@ -25,7 +30,7 @@ puzzleControllers.controller('GalleryCtrl', ['$scope', 'AdService', 'PuzzleManag
 
     $scope.availableLevels = availableLevels;
 
-    AdService.showAdmob();
+    //AdService.showAdmob();
 }]);
 
 puzzleControllers.controller('SelectCtrl', ['$scope', '$stateParams', 'PuzzleManager', function($scope, $stateParams, PuzzleManager) {
@@ -36,15 +41,22 @@ puzzleControllers.controller('SelectCtrl', ['$scope', '$stateParams', 'PuzzleMan
     $scope.playableLevels = PuzzleManager.getPlayableLevels(puzzle);
 }]);
 
-puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatrix', 'AdService', 'PuzzleManager', 'ImageCropper', 'PuzzleRenderer',
-    function ($stateParams, $scope, PuzzleMatrix, AdService, PuzzleManager, ImageCropper, PuzzleRenderer) {
+puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatrix', 'AdService', 'PuzzleManager', 'ImageCropper', 'PuzzleRenderer', '$ionicLoading',
+    function ($stateParams, $scope, PuzzleMatrix, AdService, PuzzleManager, ImageCropper, PuzzleRenderer, $ionicLoading) {
 
-    var onChange, container, partitions;
+    $ionicLoading.show({
+        template: "Loading..."
+    });
+
+    var onChange, partitions;
+
+    partitions = parseInt($stateParams.size);
 
     $scope.imgSource =  'img/' + $stateParams.src;
     $scope.containerShown = true;
     $scope.originalShown = false;
     $scope.puzzleMatrix = PuzzleMatrix;
+    $scope.partitions = partitions;
 
     $scope.showOriginal = function() {
         $scope.originalShown = true;
@@ -57,13 +69,7 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
     };
 
     $scope.cellClick = function (i, j) {
-        onChange();
-        /*
-        var target = evt.target, tile, possibleTiles;
-
- 
-        i = parseInt(target.getAttribute('data-i'));
-        j = parseInt(target.getAttribute('data-j'));
+        var tile, possibleTiles;
 
         tile = PuzzleMatrix.tiles[i][j];
 
@@ -87,32 +93,26 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
                 }
             }
         }
-        */
     };
 
-    container = document.getElementById('container');
-    partitions = parseInt($stateParams.size);
+    onChange = function () {
+        console.log("on change triggered");
+        $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
+        if (PuzzleMatrix.isCompleted()) {
+            PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
+            // TODO Add a better message to show that you won or do another controller.
+            alert('You did it!!!');
+        }
+    };
+
 
     var img = new Image();
     img.onload = function () {
-        console.log("image onload called on play");
-
-        // TODO Calculate the proper size.
-        ImageCropper.initialize(133, 133, img);
+        ImageCropper.initialize(IMAGES_SIZE / partitions, IMAGES_SIZE / partitions, img);
         PuzzleMatrix.initialize(partitions, partitions);
-        PuzzleRenderer.initialize(container, partitions);
+        PuzzleRenderer.initialize(partitions);
         $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
-
-        console.log("$scope.sources initialized", $scope.sources);
-
-        onChange = function () {
-            $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
-            console.log("$scope.sources", $scope.sources);
-            if (PuzzleMatrix.isCompleted()) {
-                PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
-                alert('You did it!!!');
-            }
-        };
+        $ionicLoading.hide();
     };
     img.src = $scope.imgSource;
     if (img.complete) {

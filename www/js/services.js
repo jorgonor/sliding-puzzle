@@ -56,6 +56,7 @@ puzzleServices.factory('PuzzleMatrix', function() {
     };
 });
 
+// TODO Reimplement with a new plugin
 puzzleServices.factory('AdService', function() {
     var admobId = 'ca-app-pub-4620086008956912/4688100782',
         analyticsId = 'UA-36061398-3';
@@ -90,11 +91,10 @@ puzzleServices.factory('AdService', function() {
 
 puzzleServices.factory('PuzzleManager', function() {
     var puzzles = [
-        {id: "Rally", src: "1.jpg", order: 0},
-        {id: "Soldier in the mud", src: "2.jpg", order: 1 },
-        {id: "Girl", src: "3.jpg", order: 2},
-        {id: "Athletism Training", src: "4.jpg", order: 3, },
-        {id: "Medieval Cannon", src: "5.jpg", order: 4}
+        {id: "Fuleco", src: "1.jpg", order: 0},
+        {id: "Scenery", src: "2.jpg", order: 1 },
+        {id: "Palace", src: "3.jpg", order: 2},
+        {id: "Troll", src: "4.jpg", order: 3, },
     ];
 
     return {
@@ -183,19 +183,28 @@ puzzleServices.factory('ImageCropper', function () {
             this.height = height;
             this.image = image;
             this._initializeCanvas();
+            this.cache = new Array(width);
+            for(var i = width - 1; i >= 0; i--) {
+                this.cache[i] = new Array(height);
+                for (var j = height - 1; j >= 0; j--) {
+                    this.cache[i][j] = null;
+                }
+            }
         },
         _initializeCanvas: function () {
             this.canvas = document.createElement('canvas');
             this.canvas.setAttribute('width', this.width);
             this.canvas.setAttribute('height', this.height);
-
             this.context = this.canvas.getContext('2d');
         },
         crop: function (row, col) {
-
-            console.log("image complete" + this.image.complete);
+            console.log("invoking ImageCropper.crop(" + row + ", " + col + ")");
             if (!this.image.complete) {
                 return null;
+            }
+
+            if (null !== this.cache[row][col]) {
+                return this.cache[row][col];
             }
 
             var r;
@@ -203,8 +212,8 @@ puzzleServices.factory('ImageCropper', function () {
             this.context.drawImage(this.image, row * this.width, col * this.height, this.width, this.height, 0, 0, this.width, this.height);
 
             r = this.canvas.toDataURL();
-
-            console.log("in (row, col) (" + row + ", " + col + ") the data is ", r); 
+            console.log("invoking ImageCropper.crop(" + row + ", " + col + ") data: " + r);
+            this.cache[row][col] = r;
 
             return r;
         }
@@ -213,8 +222,7 @@ puzzleServices.factory('ImageCropper', function () {
 
 puzzleServices.factory('PuzzleRenderer', ['PuzzleMatrix', 'ImageCropper', function (PuzzleMatrix, ImageCropper) {
     return {
-        initialize: function (container, partitions) {
-            this.container = container;
+        initialize: function (partitions) {
             this.partitions = partitions;
         },
         render: function (puzzle) {
@@ -226,7 +234,7 @@ puzzleServices.factory('PuzzleRenderer', ['PuzzleMatrix', 'ImageCropper', functi
                     obj = PuzzleMatrix.tiles[i][j];
 
                     if (obj.i === null) {
-                        src = "http://placehold.it/133x133";
+                        src = "img/" + ImageCropper.width + "x" + ImageCropper.height + ".png";
                     } else {
                         src = ImageCropper.crop(obj.i, obj.j);
                     }

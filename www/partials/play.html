@@ -3,22 +3,22 @@
         <h1 class="title">Play</h1>
     </ion-header-bar>
     <ion-content>
-        <div id="container">
-            <div ng-show="containerShown">
-                <div class="row matrix-row" ng-repeat-start="row in puzzleMatrix.tiles">
-                    <img ng-src="{{ sources[$parent.$index][$index] }}" ng-click="cellClick($parent.$index, $index)" class="matrix-cell" ng-repeat="col in row" />
+        <div class="row" id="container" ng-init="matrixClass='matrix-cell-' + partitions">
+            <div class="col">
+                <div ng-show="originalShown" class="row matrix-row">
+                    <img id="original" class="img-responsive center-block" ng-src="{{ imgSource }}" />
+                </div>
+                <div ng-show="containerShown" class="row matrix-row" ng-repeat-start="row in puzzleMatrix.tiles">
+                    <img ng-src="{{ sources[$parent.$index][$index] }}" ng-click="cellClick($parent.$index, $index)" class="matrix-cell" ng-class="matrixClass" ng-repeat="col in row"  />
                 </div>
                 <div class="clearfix" ng-repeat-end></div>
             </div>
 
-            <div ng-show="originalShown">
-                <div id="original">
-                    <img class="img-responsive center-block" ng-src="{{ imgSource }}" />
-                </div>
-            </div>
-
-            <div>
-                <button class="button glyphicon ion-image" ng-mousedown="showOriginal()" ng-mouseup="hideOriginal()"></button>
+            <div class="col">
+                <button class="button glyphicon ion-image"
+                        ng-mousedown="showOriginal()" ng-mouseup="hideOriginal()"
+                        on-touch="showOriginal()" on-release="hideOriginal()">
+                </button>
             </div>
         </div>
     </ion-content>
