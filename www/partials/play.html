@@ -5,13 +5,14 @@
     <ion-content>
         <div class="row" id="container" ng-init="matrixClass='matrix-cell-' + partitions">
             <div class="col">
-                <div ng-show="originalShown" class="row matrix-row">
-                    <img id="original" class="img-responsive center-block" ng-src="{{ imgSource }}" />
+                <div ng-show="originalShown" class="row matrix-row" ng-repeat-start="row in originalSources">
+                    <img ng-src="{{ originalSources[$parent.$index][$index] }}" ng-click="cellClick($parent.$index, $index)" class="matrix-cell" ng-class="matrixClass" ng-repeat="col in row"  />
                 </div>
-                <div ng-show="containerShown" class="row matrix-row" ng-repeat-start="row in puzzleMatrix.tiles">
+                <div ng-show="originalShown" class="clearfix" ng-repeat-end></div>
+                <div ng-show="containerShown" class="row matrix-row" ng-repeat-start="row in sources">
                     <img ng-src="{{ sources[$parent.$index][$index] }}" ng-click="cellClick($parent.$index, $index)" class="matrix-cell" ng-class="matrixClass" ng-repeat="col in row"  />
                 </div>
-                <div class="clearfix" ng-repeat-end></div>
+                <div ng-show="containerShown" class="clearfix" ng-repeat-end></div>
             </div>
 
             <div class="col">

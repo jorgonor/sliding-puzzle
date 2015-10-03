@@ -104,7 +104,7 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
         if (PuzzleMatrix.isCompleted()) {
             PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
             // Complete image.
-            $scope.sources[2][2] = ImageCropper.crop(2, 2);
+            $scope.sources[partitions - 1][partitions - 1] = ImageCropper.crop(partitions - 1, partitions - 1);
 
             setTimeout(function () {
                 $ionicPopup.alert({
@@ -123,6 +123,13 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
         PuzzleMatrix.initialize(partitions, partitions);
         PuzzleRenderer.initialize(partitions);
         $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
+        $scope.originalSources = new Array(partitions);
+        for (var row = partitions - 1; row >= 0; row--) {
+            $scope.originalSources[row] = new Array(partitions);
+            for (var col = partitions - 1; col >= 0; col--) {
+                $scope.originalSources[row][col] = ImageCropper.crop(row, col);
+            }
+        }
         $ionicLoading.hide();
     };
     img.src = $scope.imgSource;

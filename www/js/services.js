@@ -234,7 +234,7 @@ puzzleServices.factory('ImageCropper', function () {
 
             var r;
 
-            this.context.drawImage(this.image, row * this.width, col * this.height, this.width, this.height, 0, 0, this.width, this.height);
+            this.context.drawImage(this.image, col * this.width, row * this.height, this.width, this.height, 0, 0, this.width, this.height);
 
             r = this.canvas.toDataURL();
             this.cache[row][col] = r;
@@ -260,7 +260,7 @@ puzzleServices.factory('PuzzleRenderer', ['PuzzleMatrix', 'ImageCropper', functi
                     if (obj.i === null) {
                         src = "img/" + ImageCropper.width + "x" + ImageCropper.height + ".png";
                     } else {
-                        src = ImageCropper.crop(obj.j, obj.i);
+                        src = ImageCropper.crop(obj.i, obj.j);
                     }
                     x.push(src);
                 }
