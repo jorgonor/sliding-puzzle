@@ -22,7 +22,8 @@ puzzleServices.factory('PuzzleMatrix', function() {
 
             this.shuffle();
         },
-        shuffle: function() {
+        shuffle: function () {
+            // TODO Investigate if any random-generated puzzle works.
             var t, newI, newJ;
             for(var i = 0; i < this.width; i++) {
                 for(var j = 0; j < this.height; j++) {
@@ -198,7 +199,6 @@ puzzleServices.factory('ImageCropper', function () {
             this.context = this.canvas.getContext('2d');
         },
         crop: function (row, col) {
-            console.log("invoking ImageCropper.crop(" + row + ", " + col + ")");
             if (!this.image.complete) {
                 return null;
             }
@@ -212,7 +212,6 @@ puzzleServices.factory('ImageCropper', function () {
             this.context.drawImage(this.image, row * this.width, col * this.height, this.width, this.height, 0, 0, this.width, this.height);
 
             r = this.canvas.toDataURL();
-            console.log("invoking ImageCropper.crop(" + row + ", " + col + ") data: " + r);
             this.cache[row][col] = r;
 
             return r;
@@ -236,7 +235,7 @@ puzzleServices.factory('PuzzleRenderer', ['PuzzleMatrix', 'ImageCropper', functi
                     if (obj.i === null) {
                         src = "img/" + ImageCropper.width + "x" + ImageCropper.height + ".png";
                     } else {
-                        src = ImageCropper.crop(obj.i, obj.j);
+                        src = ImageCropper.crop(obj.j, obj.i);
                     }
                     x.push(src);
                 }

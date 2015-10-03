@@ -24,17 +24,20 @@ angular.module('puzzleApp', ['ionic', 'puzzleControllers', 'puzzleServices'])
 		controller: 'IndexCtrl'
 	})
 	.state('gallery', {
-		url: '/gallery',
+	    url: '/gallery',
+        cache: false,
 		templateUrl: 'partials/gallery.html',
 		controller: 'GalleryCtrl'
 	})
 	.state('puzzleSelect', {
 		url: '/puzzle/select/:src',
+        cache: false,
 		templateUrl: 'partials/puzzle-select.html',
 		controller: 'SelectCtrl'
 	})
 	.state('play', {
 		url: '/puzzle/play/:size/:src',
+        cache: false,
 		templateUrl: 'partials/play.html',
 		controller: 'PlayCtrl'
 	});

@@ -4,6 +4,7 @@ var IMAGES_SIZE = 1200;
 var puzzleControllers = angular.module('puzzleControllers', []);
 
 puzzleControllers.controller('IndexCtrl', ['$scope', function ($scope) {
+
     // TODO Reimplement with a working facebook plugin.
     document.getElementById('link_connectfb').addEventListener('click', function() {
         facebookConnectPlugin.login(['public_profile', 'email'], function(userData) {
@@ -41,8 +42,8 @@ puzzleControllers.controller('SelectCtrl', ['$scope', '$stateParams', 'PuzzleMan
     $scope.playableLevels = PuzzleManager.getPlayableLevels(puzzle);
 }]);
 
-puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatrix', 'AdService', 'PuzzleManager', 'ImageCropper', 'PuzzleRenderer', '$ionicLoading',
-    function ($stateParams, $scope, PuzzleMatrix, AdService, PuzzleManager, ImageCropper, PuzzleRenderer, $ionicLoading) {
+puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatrix', 'PuzzleManager', 'ImageCropper', 'PuzzleRenderer', '$ionicLoading', '$ionicPopup',
+    function ($stateParams, $scope, PuzzleMatrix, PuzzleManager, ImageCropper, PuzzleRenderer, $ionicLoading, $ionicPopup) {
 
     $ionicLoading.show({
         template: "Loading..."
@@ -96,12 +97,20 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
     };
 
     onChange = function () {
-        console.log("on change triggered");
+        //console.log("on change triggered");
         $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
         if (PuzzleMatrix.isCompleted()) {
             PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
-            // TODO Add a better message to show that you won or do another controller.
-            alert('You did it!!!');
+            // Complete image.
+            $scope.sources[2][2] = ImageCropper.crop(2, 2);
+
+            setTimeout(function () {
+                $ionicPopup.alert({
+                    templateUrl: 'partials/victory.html',
+                    title: "Victory!"
+                });
+
+            }, 500);
         }
     };
 
