@@ -51,23 +51,7 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
         template: "Loading..."
     });
 
-    var onChange, partitions, initTime = Math.floor((new Date()).getTime() / 1000), timeInterval;
-
-    timeInterval = $interval(function () {
-        var now, elapsedTime, seconds;
-        now = Math.floor((new Date()).getTime() / 1000);
-        elapsedTime = now - initTime;
-
-        seconds = elapsedTime % 60;
-        if (seconds < 10) {
-            seconds = "0" + seconds.toString();
-        } else {
-            seconds = seconds.toString();
-        }
-
-        $scope.seconds = seconds;
-        $scope.minutes = Math.floor(elapsedTime / 60);
-    }, 1000);
+    var onChange, partitions, initTime, timeInterval;
 
     partitions = parseInt($stateParams.size);
 
@@ -158,6 +142,24 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
             }
         }
         $ionicLoading.hide();
+
+        initTime = Math.floor((new Date()).getTime() / 1000);
+
+        timeInterval = $interval(function () {
+            var now, elapsedTime, seconds;
+            now = Math.floor((new Date()).getTime() / 1000);
+            elapsedTime = now - initTime;
+
+            seconds = elapsedTime % 60;
+            if (seconds < 10) {
+                seconds = "0" + seconds.toString();
+            } else {
+                seconds = seconds.toString();
+            }
+
+            $scope.seconds = seconds;
+            $scope.minutes = Math.floor(elapsedTime / 60);
+        }, 1000);
     };
     img.src = $scope.imgSource;
     if (img.complete) {
