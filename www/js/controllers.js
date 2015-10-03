@@ -6,6 +6,7 @@ var puzzleControllers = angular.module('puzzleControllers', []);
 puzzleControllers.controller('IndexCtrl', ['$scope', function ($scope) {
 
     // TODO Reimplement with a working facebook plugin.
+    /*
     document.getElementById('link_connectfb').addEventListener('click', function() {
         facebookConnectPlugin.login(['public_profile', 'email'], function(userData) {
             document.getElementById('facebookApiResult', JSON.stringify(userData));
@@ -13,6 +14,7 @@ puzzleControllers.controller('IndexCtrl', ['$scope', function ($scope) {
             alert('Failed: ' + message);
         });
     });
+    */
 }]);
 
 puzzleControllers.controller('GalleryCtrl', ['$scope', 'AdService', 'PuzzleManager', function($scope, AdService, PuzzleManager) {
