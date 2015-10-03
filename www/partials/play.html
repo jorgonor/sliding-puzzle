@@ -16,10 +16,21 @@
             </div>
 
             <div class="col">
-                <button class="button glyphicon ion-image"
-                        ng-mousedown="showOriginal()" ng-mouseup="hideOriginal()"
-                        on-touch="showOriginal()" on-release="hideOriginal()">
-                </button>
+                <div class="row">
+                    <div class="col-50">
+                        <h4>MOVES: {{ moves }}</h4>
+                    </div>
+                    <div class="col-50">
+                        <h4>TIME: {{ minutes }}:{{ seconds }}</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <button ng-hide="victory" class="button glyphicon ion-image"
+                            ng-mousedown="showOriginal()" ng-mouseup="hideOriginal()"
+                            on-touch="showOriginal()" on-release="hideOriginal()">
+                    </button>
+                    <a href="#/gallery" ng-show="victory" class="button button-positive">Back to gallery</a>
+                </div>
             </div>
         </div>
     </ion-content>

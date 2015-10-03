@@ -44,17 +44,35 @@ puzzleControllers.controller('SelectCtrl', ['$scope', '$stateParams', 'PuzzleMan
     $scope.playableLevels = PuzzleManager.getPlayableLevels(puzzle);
 }]);
 
-puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatrix', 'PuzzleManager', 'ImageCropper', 'PuzzleRenderer', '$ionicLoading', '$ionicPopup',
-    function ($stateParams, $scope, PuzzleMatrix, PuzzleManager, ImageCropper, PuzzleRenderer, $ionicLoading, $ionicPopup) {
+puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatrix', 'PuzzleManager', 'ImageCropper', 'PuzzleRenderer', '$ionicLoading', '$ionicPopup', '$interval', '$timeout',
+    function ($stateParams, $scope, PuzzleMatrix, PuzzleManager, ImageCropper, PuzzleRenderer, $ionicLoading, $ionicPopup, $interval, $timeout) {
 
     $ionicLoading.show({
         template: "Loading..."
     });
 
-    var onChange, partitions;
+    var onChange, partitions, initTime = Math.floor((new Date()).getTime() / 1000), timeInterval;
+
+    timeInterval = $interval(function () {
+        var now, elapsedTime, seconds;
+        now = Math.floor((new Date()).getTime() / 1000);
+        elapsedTime = now - initTime;
+
+        seconds = elapsedTime % 60;
+        if (seconds < 10) {
+            seconds = "0" + seconds.toString();
+        } else {
+            seconds = seconds.toString();
+        }
+
+        $scope.seconds = seconds;
+        $scope.minutes = Math.floor(elapsedTime / 60);
+    }, 1000);
 
     partitions = parseInt($stateParams.size);
 
+    $scope.moves = 0;
+    $scope.victory = false;
     $scope.imgSource =  'img/' + $stateParams.src;
     $scope.containerShown = true;
     $scope.originalShown = false;
@@ -77,6 +95,7 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
         tile = PuzzleMatrix.tiles[i][j];
 
         if (tile.i !== null) {
+            $scope.moves++;
             possibleTiles = [{ i: i - 1, j: j }, { i: i + 1, j: j }, { i: i, j: j - 1 }, { i: i, j: j + 1 }];
 
             for (var k = 0; k < possibleTiles.length; k++) {
@@ -102,20 +121,28 @@ puzzleControllers.controller('PlayCtrl', ['$stateParams', '$scope', 'PuzzleMatri
         //console.log("on change triggered");
         $scope.sources = PuzzleRenderer.render(PuzzleMatrix);
         if (PuzzleMatrix.isCompleted()) {
-            PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
-            // Complete image.
-            $scope.sources[partitions - 1][partitions - 1] = ImageCropper.crop(partitions - 1, partitions - 1);
-
-            setTimeout(function () {
-                $ionicPopup.alert({
-                    templateUrl: 'partials/victory.html',
-                    title: "Victory!"
-                });
-
-            }, 500);
+            $scope.victory = true;
         }
     };
 
+    $scope.$watch('victory', function () {
+        if (!$scope.victory) {
+            return;
+        }
+        $interval.cancel(timeInterval);
+        PuzzleManager.onAchievedPuzzle(PuzzleManager.findBySrc($stateParams.src), partitions);
+        // Complete image.
+        $scope.sources[partitions - 1][partitions - 1] = ImageCropper.crop(partitions - 1, partitions - 1);
+
+        $timeout(function () {
+            $ionicPopup.alert({
+                templateUrl: 'partials/victory.html',
+                title: "Victory!",
+                scope: $scope
+            });
+
+        }, 500);
+    });
 
     var img = new Image();
     img.onload = function () {
