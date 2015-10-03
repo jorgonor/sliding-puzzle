@@ -23,16 +23,41 @@ puzzleServices.factory('PuzzleMatrix', function() {
             this.shuffle();
         },
         shuffle: function () {
-            // TODO Investigate if any random-generated puzzle works.
-            var t, newI, newJ;
-            for(var i = 0; i < this.width; i++) {
-                for(var j = 0; j < this.height; j++) {
-                    newI = Math.floor(Math.random() * this.width);
-                    newJ = Math.floor(Math.random() * this.height);
-                    t = this.tiles[newI][newJ];
-                    this.tiles[newI][newJ] = this.tiles[i][j];
-                    this.tiles[i][j] = t;
+            var i = 0, iterations, increments, possiblePositions,  nullI, nullJ, aux
+            increments = [{ i: -1, j: 0 }, { i: 1, j: 0 }, { i: 0, j: -1 }, { i: 0, j: 1 }];
+
+            nullI = this.width - 1;
+            nullJ = this.height - 1;
+            iterations = 15 + Math.floor(Math.random() * 20);
+
+            while (i < iterations) {
+                possiblePositions = [];
+
+                for (var k = increments.length - 1; k >= 0; k--) {
+                    var increment = increments[k];
+                    var i1 = nullI + increment.i, j1 = nullJ + increment.j;
+                    if ((i1 >= 0 && i1 < this.width) &&
+                        (j1 >= 0 && j1 < this.height)) {
+                        possiblePositions.push({ i: i1, j: j1 });
+                    }
                 }
+
+                // Finding a random possible new position
+                var aux, auxNullI, auxNullJ;
+                aux = Math.floor(possiblePositions.length * Math.random());
+                auxNullI = possiblePositions[aux].i;
+                auxNullJ = possiblePositions[aux].j;
+
+                // Swapping tiles
+                aux = this.tiles[auxNullI][auxNullJ];
+                this.tiles[auxNullI][auxNullJ] = { i: null, j: null };
+                this.tiles[nullI][nullJ] = aux;
+                
+                // Storing the new empty index.
+                nullI = auxNullI;
+                nullJ = auxNullJ;
+
+                i++;
             }
         },
         isCompleted: function() {
